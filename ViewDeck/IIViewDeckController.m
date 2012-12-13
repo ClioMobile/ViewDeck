@@ -585,8 +585,14 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
                 [self setSlidingFrameForOffset:offsetter(ledge) forOrientation:orientation];
             } completion:completion];
         }
+        _ledge[side] = ledge;
+    } else {
+        _ledge[side] = ledge;
+        
+        if (completion) {
+            completion(YES);
+        }
     }
-    _ledge[side] = ledge;
 }
 
 - (CGFloat)sizeForSide:(IIViewDeckSide)side {
