@@ -777,7 +777,7 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
 
 
 - (BOOL)shouldAutomaticallyForwardRotationMethods {
-    return NO;
+    return YES;
 }
 
 - (BOOL)shouldAutomaticallyForwardAppearanceMethods {
@@ -785,7 +785,7 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
 }
 
 - (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers {
-    return NO;
+    return YES;
 }
 
 #pragma mark - Appearance
