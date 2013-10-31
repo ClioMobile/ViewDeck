@@ -850,6 +850,19 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
 
 #pragma mark - Appearance
 
+- (void)recursiveCallViewController:(UIViewController *)viewController withAppearanceSelector:(SEL)selector animated:(BOOL)animated
+{
+    if ([viewController respondsToSelector:selector])
+    {
+        objc_msgSend(viewController, selector, animated);
+    }
+    
+    for (UIViewController *childViewController in viewController.childViewControllers)
+    {
+        [self recursiveCallViewController:childViewController withAppearanceSelector:selector animated:animated];
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -906,7 +919,8 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
         [self didRotateFromInterfaceOrientation:_willAppearShouldArrangeViewsAfterRotation];
     }
     
-    if ([self safe_shouldManageAppearanceMethods]) [self.centerController viewWillAppear:animated];
+    if ([self safe_shouldManageAppearanceMethods])
+        [self recursiveCallViewController:self.centerController withAppearanceSelector:@selector(viewWillAppear:) animated:animated];
     [self transitionAppearanceFrom:0 to:1 animated:animated];
 
     if (self.navigationControllerBehavior == IIViewDeckNavigationControllerIntegrated) {
@@ -922,7 +936,8 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if ([self safe_shouldManageAppearanceMethods]) [self.centerController viewDidAppear:animated];
+    if ([self safe_shouldManageAppearanceMethods])
+        [self recursiveCallViewController:self.centerController withAppearanceSelector:@selector(viewDidAppear:) animated:animated];
     [self transitionAppearanceFrom:1 to:2 animated:animated];
     _viewAppeared = 2;
 }
@@ -930,7 +945,8 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    if ([self safe_shouldManageAppearanceMethods]) [self.centerController viewWillDisappear:animated];
+    if ([self safe_shouldManageAppearanceMethods])
+        [self recursiveCallViewController:self.centerController withAppearanceSelector:@selector(viewWillDisappear:) animated:animated];
     [self transitionAppearanceFrom:2 to:1 animated:animated];
     _viewAppeared = 1;
 }
@@ -947,7 +963,8 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
         //do nothing, obviously it wasn't attached because an exception was thrown
     }
     
-    if ([self safe_shouldManageAppearanceMethods]) [self.centerController viewDidDisappear:animated];
+    if ([self safe_shouldManageAppearanceMethods])
+        [self recursiveCallViewController:self.centerController withAppearanceSelector:@selector(viewDidDisappear:) animated:animated];
     [self transitionAppearanceFrom:1 to:0 animated:animated];
     _viewAppeared = 0;
 }
