@@ -1279,10 +1279,11 @@ static NSTimeInterval durationToAnimate(CGFloat pointsToAnimate, CGFloat velocit
     if (viewDeckSide == IIViewDeckNoSide)
         return;
     
-    if (_viewAppeared < to) {
-        _sideAppeared[viewDeckSide] = to;
-        return;
-    }
+//    ebany - Don't get what those line are here for, but it prevent viewWillDisapear to be triggered on dealloc
+//    if (_viewAppeared < to) {
+//        _sideAppeared[viewDeckSide] = to;
+//        return;
+//    }
 
     SEL selector = nil;
     if (from < to) {
